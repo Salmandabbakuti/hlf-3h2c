@@ -1,24 +1,68 @@
-OrdererOrgs:
-  - Name: Orderer
-    Domain: example.com
-    Specs:
-    - Hostname: orderer
-PeerOrgs:
-  - Name: Org1
-    Domain: org1.example.com
-    Template:
-      Count: 1
-    Users:
-      Count: 1
-  - Name: Org2
-    Domain: org2.example.com
-    Template:
-      Count: 1
-    Users:
-      Count: 1
-  - Name: Org3
-    Domain: org3.example.com
-    Template:
-      Count: 1
-    Users:
-      Count: 1
+---
+Organizations:
+
+    - &OrdererOrg
+        Name: OrdererOrg
+        ID: OrdererMSP
+        MSPDir: ./crypto-config/ordererOrganizations/example.com/msp
+
+    - &Org1
+        Name: Org1MSP
+        ID: Org1MSP
+        MSPDir: ./crypto-config/peerOrganizations/org1.example.com/msp
+
+    - &Org2
+        Name: Org2MSP
+        ID: Org2MSP
+        MSPDir: ./crypto-config/peerOrganizations/org2.example.com/msp
+
+    - &Org3
+        Name: Org3MSP
+        ID: Org3MSP
+        MSPDir: ./crypto-config/peerOrganizations/org3.example.com/msp
+
+Orderer: &OrdererDefaults
+
+    OrdererType: solo
+    Addresses:
+        - orderer.example.com:7050
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 99 MB
+        PreferredMaxBytes: 512 KB
+    Kafka:
+        Brokers:
+            - 127.0.0.1:9092
+    Organizations:
+Application: &ApplicationDefaults
+    Organizations:
+
+Profiles:
+
+    ThreeOrgsOrdererGenesis:
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
+                    - *Org3
+    ChannelAll:
+        Consortium: SampleConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org1
+                - *Org2
+                - *Org3
+    Channel12:
+        Consortium: SampleConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org1
+                - *Org2
