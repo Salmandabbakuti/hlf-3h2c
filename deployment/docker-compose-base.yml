@@ -60,7 +60,6 @@ services:
             - CORE_PEER_TLS_ROOTCERT_FILE=/var/hyperledger/tls/ca.crt
         volumes:
             - /var/run/:/host/var/run/
-            - $GOPATH/src/github.com/hyperledger/fabric/:/opt/gopath/src/github.com/hyperledger/fabric/
             - ../crypto-config/:/var/hyperledger/configs
             - ../channel-artifacts/:/var/hyperledger/configs
         command: peer node start
