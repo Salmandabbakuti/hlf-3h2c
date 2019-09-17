@@ -4,7 +4,7 @@ rm -rf channel-artifacts
 mkdir channel-artifacts
 export PATH=$PWD/bin:$PATH
 export FABRIC_CFG_PATH=$PWD
-cryptogen generate —-config=./crypto-config.yaml
+cryptogen generate --config=./crypto-config.yaml
 echo 'Generating genesis block and channel configurations..'
 configtxgen -profile ThreeOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block
 
